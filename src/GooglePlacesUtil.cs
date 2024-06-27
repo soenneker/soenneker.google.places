@@ -31,6 +31,7 @@ public class GooglePlacesUtil : IGooglePlacesUtil
         var request = new PlacesFindSearchRequest
         {
             Key = _apiKey,
+            Fields = FieldTypes.Name | FieldTypes.Basic | FieldTypes.Photo | FieldTypes.Place_Id,
             Input = address,
             Type = InputType.TextQuery
         };

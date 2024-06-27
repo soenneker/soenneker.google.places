@@ -1,5 +1,7 @@
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
+using FluentAssertions;
+using GoogleApi.Entities.Places.Common;
+using Soenneker.Facts.Local;
 using Soenneker.Google.Places.Abstract;
 using Soenneker.Tests.FixturedUnit;
 using Xunit;
@@ -15,5 +17,13 @@ public class GooglePlacesUtilTests : FixturedUnitTest
     public GooglePlacesUtilTests(Fixture fixture, ITestOutputHelper output) : base(fixture, output)
     {
         _util = Resolve<IGooglePlacesUtil>(true);
+    }
+
+    //[ManualFact]
+    [LocalFact]
+    public async Task GetPlace_should_get_place()
+    {
+        PlaceResult? result = await _util.GetPlace("1600 Pennsylvania Avenue NW, Washington DC, 20500");
+        result.Should().NotBeNull();
     }
 }
