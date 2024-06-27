@@ -10,6 +10,8 @@ namespace Soenneker.Google.Places.Abstract;
 /// </summary>
 public interface IGooglePlacesUtil
 {
+    ValueTask<PlaceResult?> GetDetails(string placeId, CancellationToken cancellationToken = default);
+
     /// <summary>
     /// Retrieves a list of place results matching the specified address.
     /// </summary>

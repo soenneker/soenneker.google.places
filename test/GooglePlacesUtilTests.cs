@@ -23,7 +23,8 @@ public class GooglePlacesUtilTests : FixturedUnitTest
     [LocalFact]
     public async Task GetPlace_should_get_place()
     {
-        PlaceResult? result = await _util.GetPlace("1600 Pennsylvania Avenue NW, Washington DC, 20500");
+        PlaceResult? result = await _util.GetPlace("11049 N 23rd Dr. Ste. 107, Phoenix, AZ. 85029");
         result.Should().NotBeNull();
     }
+
 }

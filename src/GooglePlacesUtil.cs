@@ -13,6 +13,9 @@ using Soenneker.Extensions.Configuration;
 using Soenneker.Extensions.Task;
 using System.Threading;
 using Soenneker.Extensions.ValueTask;
+using GoogleApi.Entities.Interfaces;
+using GoogleApi.Entities.Places.Details.Request;
+using GoogleApi.Entities.Places.Details.Response;
 
 namespace Soenneker.Google.Places;
 
@@ -26,19 +29,35 @@ public class GooglePlacesUtil : IGooglePlacesUtil
         _apiKey = config.GetValueStrict<string>("Google:Places:ApiKey");
     }
 
+    public async ValueTask<PlaceResult?> GetDetails(string placeId, CancellationToken cancellationToken = default)
+    {
+        var request = new PlacesDetailsRequest
+        {
+            PlaceId = placeId,
+            Key = _apiKey,
+            Fields = GoogleApi.Entities.Places.Details.Request.Enums.FieldTypes.Name
+        };
+
+        PlacesDetailsResponse? response = await GooglePlaces.Details.QueryAsync(request, cancellationToken).NoSync();
+
+        if (response is not {Status: Status.Ok})
+            return null;
+
+        return response.Result;
+    }
+
     public async ValueTask<List<PlaceResult>?> GetPlaces(string address, CancellationToken cancellationToken = default)
     {
         var request = new PlacesFindSearchRequest
         {
             Key = _apiKey,
-            Fields = FieldTypes.Name | FieldTypes.Basic | FieldTypes.Photo | FieldTypes.Place_Id,
             Input = address,
             Type = InputType.TextQuery
         };
 
         PlacesFindSearchResponse? response = await GooglePlaces.Search.FindSearch.QueryAsync(request, cancellationToken).NoSync();
 
-        if (response is not { Status: Status.Ok })
+        if (response is not {Status: Status.Ok})
             return null;
 
         List<PlaceResult> places = response.Candidates.ToList();
