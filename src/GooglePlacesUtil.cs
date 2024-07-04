@@ -34,7 +34,7 @@ public class GooglePlacesUtil : IGooglePlacesUtil
         {
             PlaceId = placeId,
             Key = _apiKey,
-            Fields = GoogleApi.Entities.Places.Details.Request.Enums.FieldTypes.Name | GoogleApi.Entities.Places.Details.Request.Enums.FieldTypes.Geometry
+            Fields = GoogleApi.Entities.Places.Details.Request.Enums.FieldTypes.Name | GoogleApi.Entities.Places.Details.Request.Enums.FieldTypes.Geometry | GoogleApi.Entities.Places.Details.Request.Enums.FieldTypes.Place_Id
         };
 
         if (additionalFieldTypes != null)
@@ -55,7 +55,7 @@ public class GooglePlacesUtil : IGooglePlacesUtil
             Key = _apiKey,
             Input = address,
             Type = InputType.TextQuery,
-            Fields = FieldTypes.Name | FieldTypes.Geometry
+            Fields = FieldTypes.Name | FieldTypes.Geometry | FieldTypes.Place_Id
         };
 
         if (additionalFieldTypes != null)
