@@ -13,7 +13,6 @@ using Soenneker.Extensions.Configuration;
 using Soenneker.Extensions.Task;
 using System.Threading;
 using Soenneker.Extensions.ValueTask;
-using GoogleApi.Entities.Interfaces;
 using GoogleApi.Entities.Places.Details.Request;
 using GoogleApi.Entities.Places.Details.Response;
 
@@ -29,14 +28,17 @@ public class GooglePlacesUtil : IGooglePlacesUtil
         _apiKey = config.GetValueStrict<string>("Google:Places:ApiKey");
     }
 
-    public async ValueTask<PlaceResult?> GetDetails(string placeId, CancellationToken cancellationToken = default)
+    public async ValueTask<PlaceResult?> GetDetails(string placeId, GoogleApi.Entities.Places.Details.Request.Enums.FieldTypes? additionalFieldTypes = null, CancellationToken cancellationToken = default)
     {
         var request = new PlacesDetailsRequest
         {
             PlaceId = placeId,
             Key = _apiKey,
-            Fields = GoogleApi.Entities.Places.Details.Request.Enums.FieldTypes.Name
+            Fields = GoogleApi.Entities.Places.Details.Request.Enums.FieldTypes.Name | GoogleApi.Entities.Places.Details.Request.Enums.FieldTypes.Geometry
         };
+
+        if (additionalFieldTypes != null)
+            request.Fields |= additionalFieldTypes.Value;
 
         PlacesDetailsResponse? response = await GooglePlaces.Details.QueryAsync(request, cancellationToken).NoSync();
 
@@ -46,14 +48,18 @@ public class GooglePlacesUtil : IGooglePlacesUtil
         return response.Result;
     }
 
-    public async ValueTask<List<PlaceResult>?> GetPlaces(string address, CancellationToken cancellationToken = default)
+    public async ValueTask<List<PlaceResult>?> GetPlaces(string address, FieldTypes? additionalFieldTypes = null, CancellationToken cancellationToken = default)
     {
         var request = new PlacesFindSearchRequest
         {
             Key = _apiKey,
             Input = address,
-            Type = InputType.TextQuery
+            Type = InputType.TextQuery,
+            Fields = FieldTypes.Name | FieldTypes.Geometry
         };
+
+        if (additionalFieldTypes != null)
+            request.Fields |= additionalFieldTypes.Value;
 
         PlacesFindSearchResponse? response = await GooglePlaces.Search.FindSearch.QueryAsync(request, cancellationToken).NoSync();
 
@@ -65,16 +71,16 @@ public class GooglePlacesUtil : IGooglePlacesUtil
         return places;
     }
 
-    public async ValueTask<PlaceResult?> GetPlace(string address, CancellationToken cancellationToken = default)
+    public async ValueTask<PlaceResult?> GetPlace(string address, FieldTypes? additionalFieldTypes = null, CancellationToken cancellationToken = default)
     {
-        List<PlaceResult>? places = await GetPlaces(address, cancellationToken).NoSync();
+        List<PlaceResult>? places = await GetPlaces(address, additionalFieldTypes, cancellationToken).NoSync();
 
         return places?.FirstOrDefault();
     }
 
     public async ValueTask<string?> GetPlaceId(string address, CancellationToken cancellationToken = default)
     {
-        PlaceResult? place = await GetPlace(address, cancellationToken).NoSync();
+        PlaceResult? place = await GetPlace(address, null, cancellationToken).NoSync();
 
         return place?.PlaceId;
     }

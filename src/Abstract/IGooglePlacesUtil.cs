@@ -2,6 +2,7 @@ using GoogleApi.Entities.Places.Common;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using GoogleApi.Entities.Places.Search.Find.Request.Enums;
 
 namespace Soenneker.Google.Places.Abstract;
 
@@ -10,23 +11,25 @@ namespace Soenneker.Google.Places.Abstract;
 /// </summary>
 public interface IGooglePlacesUtil
 {
-    ValueTask<PlaceResult?> GetDetails(string placeId, CancellationToken cancellationToken = default);
+    ValueTask<PlaceResult?> GetDetails(string placeId, GoogleApi.Entities.Places.Details.Request.Enums.FieldTypes? additionalFieldTypes = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Retrieves a list of place results matching the specified address.
     /// </summary>
     /// <param name="address">The address to search for places.</param>
+    /// <param name="additionalFieldTypes"></param>
     /// <param name="cancellationToken">Optional. A cancellation token to cancel the operation.</param>
     /// <returns>A list of <see cref="PlaceResult"/> objects matching the address, or null if no places are found.</returns>
-    ValueTask<List<PlaceResult>?> GetPlaces(string address, CancellationToken cancellationToken = default);
+    ValueTask<List<PlaceResult>?> GetPlaces(string address, FieldTypes? additionalFieldTypes = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Retrieves a single place result matching the specified address.
     /// </summary>
     /// <param name="address">The address to search for the place.</param>
+    /// <param name="additionalFieldTypes"></param>
     /// <param name="cancellationToken">Optional. A cancellation token to cancel the operation.</param>
     /// <returns>A <see cref="PlaceResult"/> object matching the address, or null if no place is found.</returns>
-    ValueTask<PlaceResult?> GetPlace(string address, CancellationToken cancellationToken = default);
+    ValueTask<PlaceResult?> GetPlace(string address, FieldTypes? additionalFieldTypes = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Retrieves the place ID for a given address.
