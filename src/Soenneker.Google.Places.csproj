@@ -44,7 +44,7 @@
     <ItemGroup>
         <PackageReference Include="GoogleApi" Version="5.4.7" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
-        <PackageReference Include="Soenneker.Extensions.Configuration" Version="2.1.400" />
+        <PackageReference Include="Soenneker.Extensions.Configuration" Version="2.1.402" />
         <PackageReference Include="Soenneker.Extensions.Task" Version="2.1.62" />
         <PackageReference Include="Soenneker.Extensions.ValueTask" Version="2.1.47" />
     </ItemGroup>
