@@ -32,7 +32,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\src\Soenneker.Google.Places.csproj" />
+        <ProjectReference Include="..\..\src\Soenneker.Google.Places.csproj" />
     </ItemGroup>
 
 </Project>
