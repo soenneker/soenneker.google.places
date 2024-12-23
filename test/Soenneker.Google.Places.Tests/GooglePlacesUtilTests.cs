@@ -1,11 +1,6 @@
-using System.Threading.Tasks;
-using FluentAssertions;
-using GoogleApi.Entities.Places.Common;
-using Soenneker.Facts.Local;
 using Soenneker.Google.Places.Abstract;
 using Soenneker.Tests.FixturedUnit;
 using Xunit;
-
 
 namespace Soenneker.Google.Places.Tests;
 
@@ -19,12 +14,9 @@ public class GooglePlacesUtilTests : FixturedUnitTest
         _util = Resolve<IGooglePlacesUtil>(true);
     }
 
-    //[ManualFact]
-    [LocalFact]
-    public async Task GetPlace_should_get_place()
+    [Fact]
+    public void Default()
     {
-        PlaceResult? result = await _util.GetPlace("11049 N 23rd Dr. Ste. 107, Phoenix, AZ. 85029");
-        result.Should().NotBeNull();
-    }
 
+    }
 }

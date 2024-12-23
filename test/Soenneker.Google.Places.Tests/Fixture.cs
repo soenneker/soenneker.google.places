@@ -2,8 +2,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Soenneker.Fixtures.Unit;
-using Soenneker.Google.Places.Registrars;
 using Soenneker.Utils.Test;
+using Soenneker.Google.Places.Registrars;
 
 namespace Soenneker.Google.Places.Tests;
 
