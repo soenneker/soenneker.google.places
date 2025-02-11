@@ -1,4 +1,4 @@
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Soenneker.Google.Places.Abstract;
 
@@ -12,16 +12,18 @@ public static class GooglePlacesUtilRegistrar
     /// <summary>
     /// Adds <see cref="IGooglePlacesUtil"/> as a singleton service. <para/>
     /// </summary>
-    public static void AddGooglePlacesUtilAsSingleton(this IServiceCollection services)
+    public static IServiceCollection AddGooglePlacesUtilAsSingleton(this IServiceCollection services)
     {
         services.TryAddSingleton<IGooglePlacesUtil, GooglePlacesUtil>();
+        return services;
     }
 
     /// <summary>
     /// Adds <see cref="IGooglePlacesUtil"/> as a scoped service. <para/>
     /// </summary>
-    public static void AddGooglePlacesUtilAsScoped(this IServiceCollection services)
+    public static IServiceCollection AddGooglePlacesUtilAsScoped(this IServiceCollection services)
     {
         services.TryAddScoped<IGooglePlacesUtil, GooglePlacesUtil>();
+        return services;
     }
 }
