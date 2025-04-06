@@ -45,6 +45,6 @@
         <PackageReference Include="GoogleApi" Version="5.8.4" />
         <PackageReference Include="Soenneker.Extensions.Configuration" Version="3.0.660" />
         <PackageReference Include="Soenneker.Extensions.Task" Version="3.0.95" />
-        <PackageReference Include="Soenneker.Extensions.ValueTask" Version="3.0.85" />
+        <PackageReference Include="Soenneker.Extensions.ValueTask" Version="3.0.86" />
     </ItemGroup>
 </Project>
