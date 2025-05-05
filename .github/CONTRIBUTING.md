@@ -1,4 +1,4 @@
-# Contributing to Soenneker.Google.Places
+﻿# Contributing to Soenneker.Google.Places
 
 We're excited that you're interested in contributing!
 
