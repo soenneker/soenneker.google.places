@@ -1,20 +1,19 @@
 using Soenneker.Google.Places.Abstract;
-using Soenneker.Tests.FixturedUnit;
-using Xunit;
+using Soenneker.Tests.HostedUnit;
 
 namespace Soenneker.Google.Places.Tests;
 
-[Collection("Collection")]
-public class GooglePlacesUtilTests : FixturedUnitTest
+[ClassDataSource<Host>(Shared = SharedType.PerTestSession)]
+public class GooglePlacesUtilTests : HostedUnitTest
 {
     private readonly IGooglePlacesUtil _util;
 
-    public GooglePlacesUtilTests(Fixture fixture, ITestOutputHelper output) : base(fixture, output)
+    public GooglePlacesUtilTests(Host host) : base(host)
     {
         _util = Resolve<IGooglePlacesUtil>(true);
     }
 
-    [Fact]
+    [Test]
     public void Default()
     {
 
