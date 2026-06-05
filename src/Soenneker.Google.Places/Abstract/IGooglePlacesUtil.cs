@@ -11,6 +11,13 @@ namespace Soenneker.Google.Places.Abstract;
 /// </summary>
 public interface IGooglePlacesUtil
 {
+    /// <summary>
+    /// Gets details.
+    /// </summary>
+    /// <param name="placeId">The place id.</param>
+    /// <param name="additionalFieldTypes">The additional field types.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task containing the result of the operation.</returns>
     ValueTask<PlaceResult?> GetDetails(string placeId, GoogleApi.Entities.Places.Details.Request.Enums.FieldTypes? additionalFieldTypes = null, CancellationToken cancellationToken = default);
 
     /// <summary>
