@@ -14,10 +14,10 @@ public interface IGooglePlacesUtil
     /// <summary>
     /// Gets details.
     /// </summary>
-    /// <param name="placeId">The place id.</param>
-    /// <param name="additionalFieldTypes">The additional field types.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A task containing the result of the operation.</returns>
+    /// <param name="placeId">Identifier of the place to target.</param>
+    /// <param name="additionalFieldTypes">Additional Field Types for the get details operation.</param>
+    /// <param name="cancellationToken">Token used to cancel the operation.</param>
+    /// <returns>A task whose result is the requested place Result.</returns>
     ValueTask<PlaceResult?> GetDetails(string placeId, GoogleApi.Entities.Places.Details.Request.Enums.FieldTypes? additionalFieldTypes = null, CancellationToken cancellationToken = default);
 
     /// <summary>
