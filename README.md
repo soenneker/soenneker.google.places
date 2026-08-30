@@ -5,7 +5,7 @@
 
 # Soenneker.Google.Places
 
-A utility library for Google Places API operations.
+A DI-ready wrapper for Google Places Find Place and Place Details requests.
 
 ## Install
 
@@ -13,33 +13,56 @@ A utility library for Google Places API operations.
 dotnet add package Soenneker.Google.Places
 ```
 
-## Quick start
+## Configuration
+
+```json
+{
+  "Google": {
+    "Places": {
+      "ApiKey": "<Google Places API key>"
+    }
+  }
+}
+```
+
+## Register
 
 ```csharp
 using Soenneker.Google.Places.Registrars;
 using Microsoft.Extensions.DependencyInjection;
 
-var services = new ServiceCollection();
-var result = services.AddGooglePlacesUtilAsSingleton();
+services.AddGooglePlacesUtilAsScoped();
 ```
 
-Adds `IGooglePlacesUtil` as a singleton service.
+Singleton registration is also available through `AddGooglePlacesUtilAsSingleton()`; the implementation is stateless after reading its API key.
 
-## What you get
+## Find a place and load details
 
-- `IGooglePlacesUtil` — A utility library for Google Places API operations.
-- `GooglePlacesUtilRegistrar` — A utility library for Google Places API operations.
+```csharp
+PlaceResult? candidate = await places.GetPlace(
+    "1600 Amphitheatre Parkway, Mountain View, CA",
+    cancellationToken: cancellationToken);
+
+if (candidate?.PlaceId is { } placeId)
+{
+    PlaceResult? details = await places.GetDetails(
+        placeId,
+        cancellationToken: cancellationToken);
+}
+```
+
+Name, geometry, and place ID are always requested. Supply `additionalFieldTypes` when the response must include other billable fields.
 
 ## API at a glance
 
 | API | What it does | Result / important behavior |
 | --- | --- | --- |
-| `IGooglePlacesUtil.GetPlaces(address, additionalFieldTypes, cancellationToken)` | Retrieves a list of place results matching the specified address. | A list of `PlaceResult` objects matching the address, or null if no places are found. |
-| `IGooglePlacesUtil.GetPlace(address, additionalFieldTypes, cancellationToken)` | Retrieves a single place result matching the specified address. | A `PlaceResult` object matching the address, or null if no place is found. |
-| `IGooglePlacesUtil.GetPlaceId(address, cancellationToken)` | Retrieves the place ID for a given address. | The place ID as a string, or null if no place ID is found. |
-| `GooglePlacesUtilRegistrar.AddGooglePlacesUtilAsSingleton(services)` | Adds `IGooglePlacesUtil` as a singleton service. | The same service collection, so additional registrations can be chained. |
-| `GooglePlacesUtilRegistrar.AddGooglePlacesUtilAsScoped(services)` | Adds `IGooglePlacesUtil` as a scoped service. | The same service collection, so additional registrations can be chained. |
+| `GetPlaces(address, additionalFieldTypes)` | Runs a text Find Place request. | Returns candidates in response order, or an empty list for no match. |
+| `GetPlace(address, additionalFieldTypes)` | Returns the first Find Place candidate. | `null` for no match; it is not an exact-match guarantee. |
+| `GetPlaceId(address)` | Returns the first candidate's place ID. | `null` for no match. |
+| `GetDetails(placeId, additionalFieldTypes)` | Loads details for an existing place ID. | `null` when Google reports that the place was not found. |
 
 ## Practical notes
 
-- Cancellation stops pending work; it does not undo work that has already completed.
+- Quota, authentication, permission, invalid-request, and other non-success statuses throw `InvalidOperationException`; they are not reported as empty results.
+- Transport failures propagate from the underlying Google API client, and cancellation is forwarded to each request.

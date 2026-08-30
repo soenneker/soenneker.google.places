@@ -5,7 +5,7 @@ using Soenneker.Google.Places.Abstract;
 namespace Soenneker.Google.Places.Registrars;
 
 /// <summary>
-/// A utility library for Google Places API operations
+/// Registers the Google Places lookup utility.
 /// </summary>
 public static class GooglePlacesUtilRegistrar
 {

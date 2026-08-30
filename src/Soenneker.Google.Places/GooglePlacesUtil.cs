@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Soenneker.Google.Places.Abstract;
@@ -18,8 +19,7 @@ using GoogleApi.Entities.Places.Details.Response;
 
 namespace Soenneker.Google.Places;
 
-/// <inheritdoc cref="IGooglePlacesUtil"/>
-public class GooglePlacesUtil : IGooglePlacesUtil
+public sealed class GooglePlacesUtil : IGooglePlacesUtil
 {
     private readonly string _apiKey;
 
@@ -42,13 +42,19 @@ public class GooglePlacesUtil : IGooglePlacesUtil
 
         PlacesDetailsResponse? response = await GooglePlaces.Details.QueryAsync(request, cancellationToken).NoSync();
 
-        if (response is not {Status: Status.Ok})
+        if (response is null)
+            throw new InvalidOperationException("Google Places returned no details response.");
+
+        if (response.Status is Status.ZeroResults or Status.NotFound)
             return null;
+
+        if (response.Status is not Status.Ok)
+            throw new InvalidOperationException($"Google Places details request failed with status {response.Status}.");
 
         return response.Result;
     }
 
-    public async ValueTask<List<PlaceResult>?> GetPlaces(string address, FieldTypes? additionalFieldTypes = null, CancellationToken cancellationToken = default)
+    public async ValueTask<List<PlaceResult>> GetPlaces(string address, FieldTypes? additionalFieldTypes = null, CancellationToken cancellationToken = default)
     {
         var request = new PlacesFindSearchRequest
         {
@@ -63,8 +69,14 @@ public class GooglePlacesUtil : IGooglePlacesUtil
 
         PlacesFindSearchResponse? response = await GooglePlaces.Search.FindSearch.QueryAsync(request, cancellationToken).NoSync();
 
-        if (response is not {Status: Status.Ok})
-            return null;
+        if (response is null)
+            throw new InvalidOperationException("Google Places returned no search response.");
+
+        if (response.Status is Status.ZeroResults or Status.NotFound)
+            return [];
+
+        if (response.Status is not Status.Ok)
+            throw new InvalidOperationException($"Google Places search request failed with status {response.Status}.");
 
         List<PlaceResult> places = response.Candidates.ToList();
 
@@ -73,9 +85,9 @@ public class GooglePlacesUtil : IGooglePlacesUtil
 
     public async ValueTask<PlaceResult?> GetPlace(string address, FieldTypes? additionalFieldTypes = null, CancellationToken cancellationToken = default)
     {
-        List<PlaceResult>? places = await GetPlaces(address, additionalFieldTypes, cancellationToken).NoSync();
+        List<PlaceResult> places = await GetPlaces(address, additionalFieldTypes, cancellationToken).NoSync();
 
-        return places?.FirstOrDefault();
+        return places.FirstOrDefault();
     }
 
     public async ValueTask<string?> GetPlaceId(string address, CancellationToken cancellationToken = default)
