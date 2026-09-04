@@ -19,6 +19,7 @@ using GoogleApi.Entities.Places.Details.Response;
 
 namespace Soenneker.Google.Places;
 
+/// <inheritdoc cref="IGooglePlacesUtil" />
 public sealed class GooglePlacesUtil : IGooglePlacesUtil
 {
     private readonly string _apiKey;
