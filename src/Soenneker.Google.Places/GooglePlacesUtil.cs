@@ -26,7 +26,7 @@ public sealed class GooglePlacesUtil : IGooglePlacesUtil
 
     public GooglePlacesUtil(IConfiguration config)
     {
-        _apiKey = config.GetValueStrict<string>("Google:Places:ApiKey");
+        _apiKey = config.GetStringStrict("Google:Places:ApiKey");
     }
 
     public async ValueTask<PlaceResult?> GetDetails(string placeId, GoogleApi.Entities.Places.Details.Request.Enums.FieldTypes? additionalFieldTypes = null, CancellationToken cancellationToken = default)
